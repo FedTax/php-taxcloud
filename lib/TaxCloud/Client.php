@@ -463,6 +463,27 @@ class Client
    */
   protected function post(string $endpoint, JsonSerializable $payload) {
     $url = "{$this->base_uri}{$endpoint}";
+
+    // Fallback if cURL is not available
+    if (!function_exists('curl_init')) {
+      if (function_exists('wp_remote_post')) {
+        $response = wp_remote_post($url, [
+          'headers' => array_merge(self::$headers, ['Content-Type' => 'application/json']),
+          'body'    => json_encode($payload),
+          'timeout' => getenv('PHP_TAXCLOUD_REQUEST_TIMEOUT') ?: 30,
+        ]);
+
+        if (is_wp_error($response)) {
+          throw new RequestException('TaxCloud request failed: ' . $response->get_error_message());
+        }
+
+        return wp_remote_retrieve_body($response);
+      }
+
+      // No WordPress HTTP API available → throw meaningful exception
+      throw new RequestException('PHP cURL extension is not enabled and no fallback HTTP transport is available.');
+    }
+
     $ch = curl_init($url);
 
     curl_setopt_array($ch, array(
