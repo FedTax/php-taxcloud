@@ -44,9 +44,18 @@ class VerifiedAddress
    */
   public function __construct($response) {
     $result = json_decode($response, true);
+    
+    if (!is_array($result)) {
+      return;
+    }
 
     foreach ($result as $key => $value) {
-      $this->$key = $value;
+      // Only assign to known properties, store unknown keys in $extraData.
+      if (property_exists($this, $key)) {
+        $this->$key = $value;
+      } else {
+        $this->extraData[$key] = $value;
+      }
     }
   }
 
@@ -99,5 +108,20 @@ class VerifiedAddress
   private function getZip4()
   {
     return $this->Zip4;
+  }
+
+  /**
+   * Get extra data that was returned but not part of the class properties.
+   *
+   * @param string|null $key
+   * @return mixed|null
+   */
+  public function getExtraData(?string $key = null)
+  {
+    if ($key === null) {
+      return $this->extraData;
+    }
+
+    return $this->extraData[$key] ?? null;
   }
 }
