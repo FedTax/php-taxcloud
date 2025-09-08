@@ -37,7 +37,7 @@ class Lookup extends RequestBase
   protected $deliveredBySeller; // boolean
   protected $exemptCert; // ExemptionCertificateBase
 
-  public function __construct($apiLoginID, $apiKey, $customerID, $cartID, $cartItems, Address $origin, Address $destination, $deliveredBySeller = FALSE, ExemptionCertificateBase $exemptCert = NULL)
+  public function __construct($apiLoginID, $apiKey, $customerID, $cartID, $cartItems, Address $origin, Address $destination, $deliveredBySeller = FALSE, ?ExemptionCertificateBase $exemptCert = null)
   {
     $this->setCustomerID($customerID);
     $this->setCartID($cartID);
