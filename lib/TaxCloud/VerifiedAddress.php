@@ -51,8 +51,10 @@ class VerifiedAddress
    */
   public function __construct($response) {
     $result = json_decode($response, true);
-    error_log(print_r($result, true));
+
+    // If the response is not an array, it's not a valid response.
     if (!is_array($result)) {
+      SST_Logger::add( 'Invalid VerifiedAddress response.' );
       return;
     }
 
