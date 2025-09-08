@@ -36,6 +36,13 @@ class VerifiedAddress
   private $Zip4; //string
 
   /**
+   * Stores any extra properties returned by TaxCloud that are not part of the declared class.
+   *
+   * @var array
+   */
+  private array $extraData = [];
+
+  /**
    * Constructor.
    *
    * @since 0.2.0
@@ -44,7 +51,7 @@ class VerifiedAddress
    */
   public function __construct($response) {
     $result = json_decode($response, true);
-    
+    error_log(print_r($result, true));
     if (!is_array($result)) {
       return;
     }
