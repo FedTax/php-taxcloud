@@ -464,11 +464,16 @@ class Client
   protected function post(string $endpoint, JsonSerializable $payload) {
     $url = "{$this->base_uri}{$endpoint}";
 
+    $headers = self::$headers;
+    if (function_exists('apply_filters')) {
+      $headers = apply_filters('taxcloud_api_headers', $headers, $endpoint);
+    }
+
     // Fallback if cURL is not available
     if (!function_exists('curl_init')) {
       if (function_exists('wp_remote_post')) {
         $response = wp_remote_post($url, [
-          'headers' => array_merge(self::$headers, ['Content-Type' => 'application/json']),
+          'headers' => array_merge($headers, ['Content-Type' => 'application/json']),
           'body'    => json_encode($payload),
           'timeout' => getenv('PHP_TAXCLOUD_REQUEST_TIMEOUT') ?: 30,
         ]);
@@ -487,7 +492,7 @@ class Client
     $ch = curl_init($url);
 
     curl_setopt_array($ch, array(
-      CURLOPT_HTTPHEADER => self::$headers,
+      CURLOPT_HTTPHEADER => $headers,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_TIMEOUT => getenv('PHP_TAXCLOUD_REQUEST_TIMEOUT') ?: 30,
       CURLOPT_CAINFO => dirname(dirname(dirname(__FILE__))) . '/cacert.pem',
