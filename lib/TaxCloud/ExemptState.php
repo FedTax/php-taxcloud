@@ -39,7 +39,13 @@ class ExemptState extends Serializable
 
   private function setStateAbbr($StateAbbr)
   {
-    $this->StateAbbr = constant("TaxCloud\\State::$StateAbbr");
+    if (defined("TaxCloud\\State::$StateAbbr")) {
+      $this->StateAbbr = constant("TaxCloud\\State::$StateAbbr");
+    } elseif ($StateAbbr === 'OR' && defined("TaxCloud\\State::_OR")) {
+      $this->StateAbbr = constant("TaxCloud\\State::_OR");
+    } else {
+      $this->StateAbbr = $StateAbbr;
+    }
   }
 
   public function getStateAbbr()
@@ -49,7 +55,11 @@ class ExemptState extends Serializable
 
   private function setReasonForExemption($ReasonForExemption)
   {
-    $this->ReasonForExemption = constant("TaxCloud\\ExemptionReason::$ReasonForExemption");
+    if (defined("TaxCloud\\ExemptionReason::$ReasonForExemption")) {
+      $this->ReasonForExemption = constant("TaxCloud\\ExemptionReason::$ReasonForExemption");
+    } else {
+      $this->ReasonForExemption = 'Other';
+    }
   }
 
   public function getReasonForExemption()

@@ -191,7 +191,11 @@ class ExemptionCertificateDetail extends Serializable
 
   private function setPurchaserBusinessType($PurchaserBusinessType)
   {
-    $this->PurchaserBusinessType = constant("TaxCloud\\BusinessType::$PurchaserBusinessType");
+    if (defined("TaxCloud\\BusinessType::$PurchaserBusinessType")) {
+      $this->PurchaserBusinessType = constant("TaxCloud\\BusinessType::$PurchaserBusinessType");
+    } else {
+      $this->PurchaserBusinessType = 'Other';
+    }
   }
 
   public function getPurchaserBusinessType()
@@ -211,7 +215,11 @@ class ExemptionCertificateDetail extends Serializable
 
   private function setPurchaserExemptionReason($PurchaserExemptionReason)
   {
-    $this->PurchaserExemptionReason = constant("TaxCloud\\ExemptionReason::$PurchaserExemptionReason");
+    if (defined("TaxCloud\\ExemptionReason::$PurchaserExemptionReason")) {
+      $this->PurchaserExemptionReason = constant("TaxCloud\\ExemptionReason::$PurchaserExemptionReason");
+    } else {
+      $this->PurchaserExemptionReason = 'Other';
+    }
   }
 
   public function getPurchaserExemptionReason()
