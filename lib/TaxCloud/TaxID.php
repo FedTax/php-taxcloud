@@ -39,7 +39,11 @@ class TaxID extends Serializable
 
   private function setTaxType($TaxType)
   {
-    $this->TaxType = constant("TaxCloud\\TaxIDType::$TaxType");
+    if (defined("TaxCloud\\TaxIDType::$TaxType")) {
+      $this->TaxType = constant("TaxCloud\\TaxIDType::$TaxType");
+    } else {
+      $this->TaxType = $TaxType;
+    }
   }
 
   public function getTaxType()
